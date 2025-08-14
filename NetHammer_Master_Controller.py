@@ -13,12 +13,14 @@ import threading
 import subprocess
 import argparse
 from datetime import datetime
+from whitelist_filter import WhitelistFilter
 import signal
 
 class NetHammerController:
     def __init__(self):
         self.test_processes = []
         self.scan_processes = []
+        self.whitelist_filter = WhitelistFilter()
         self.config = {
             'test_tools_path': './attack_tools/',
             'scan_tools_path': './scan_filter_attack/',
@@ -125,6 +127,13 @@ class NetHammerController:
     
     def launch_amplification_test(self, test_type, target_ip, target_port, reflector_file, threads=50, duration=300):
         """发起放大压力测试"""
+        # 安全检查
+        is_protected, message = self.whitelist_filter.check_target(target_ip)
+        if is_protected:
+            self.log(f"🚫 安全检查失败: {message}", "ERROR")
+            self.log("🛡️ NetHammer拒绝对受保护的目标进行测试", "ERROR")
+            return False
+
         if not self.check_root_privileges():
             return False
         

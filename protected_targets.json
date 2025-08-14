@@ -1,0 +1,129 @@
+{
+  "description": "NetHammer 受保护目标列表 - 禁止测试的重要机构和网站",
+  "last_updated": "2025-08-14",
+  "version": "2.0",
+  
+  "china_government": {
+    "description": "中国政府机构域名",
+    "domains": [
+      "gov.cn", "www.gov.cn", "china.gov.cn",
+      "mfa.gov.cn", "mod.gov.cn", "mps.gov.cn", "moj.gov.cn",
+      "mof.gov.cn", "moe.gov.cn", "most.gov.cn", "miit.gov.cn",
+      "mca.gov.cn", "mohrss.gov.cn", "mnr.gov.cn", "mee.gov.cn",
+      "mohurd.gov.cn", "mot.gov.cn", "mwr.gov.cn", "moa.gov.cn",
+      "mofcom.gov.cn", "nhc.gov.cn", "nrta.gov.cn", "sport.gov.cn",
+      "nea.gov.cn", "safe.gov.cn", "pbc.gov.cn", "cbirc.gov.cn",
+      "csrc.gov.cn", "cac.gov.cn", "samr.gov.cn", "nfra.gov.cn"
+    ]
+  },
+  
+  "china_provinces": {
+    "description": "中国省市政府域名",
+    "domains": [
+      "beijing.gov.cn", "shanghai.gov.cn", "tianjin.gov.cn", "chongqing.gov.cn",
+      "guangdong.gov.cn", "jiangsu.gov.cn", "zhejiang.gov.cn", "shandong.gov.cn",
+      "henan.gov.cn", "sichuan.gov.cn", "hubei.gov.cn", "hunan.gov.cn",
+      "hebei.gov.cn", "shanxi.gov.cn", "liaoning.gov.cn", "jilin.gov.cn",
+      "heilongjiang.gov.cn", "anhui.gov.cn", "fujian.gov.cn", "jiangxi.gov.cn",
+      "guangxi.gov.cn", "hainan.gov.cn", "guizhou.gov.cn", "yunnan.gov.cn",
+      "shaanxi.gov.cn", "gansu.gov.cn", "qinghai.gov.cn", "ningxia.gov.cn",
+      "xinjiang.gov.cn", "tibet.gov.cn", "xizang.gov.cn"
+    ]
+  },
+  
+  "china_institutions": {
+    "description": "中国重要机构和事业单位",
+    "domains": [
+      "cas.cn", "cass.cn", "xinhuanet.com", "people.com.cn",
+      "cctv.com", "cnr.cn", "chinanews.com", "gmw.cn",
+      "ce.cn", "youth.cn", "legaldaily.com.cn"
+    ]
+  },
+  
+  "china_media_social": {
+    "description": "中国主要媒体和社交平台",
+    "domains": [
+      "weibo.com", "weibo.cn", "sina.com.cn", "zhihu.com",
+      "douban.com", "tieba.baidu.com", "bilibili.com",
+      "douyin.com", "toutiao.com", "qq.com", "wechat.com",
+      "weixin.qq.com", "baidu.com", "alibaba.com", "tencent.com",
+      "jd.com", "taobao.com", "tmall.com", "alipay.com", "ant.group"
+    ]
+  },
+  
+  "us_government": {
+    "description": "美国政府机构",
+    "domains": [
+      "gov", "mil", "edu", "whitehouse.gov", "state.gov",
+      "defense.gov", "fbi.gov", "cia.gov", "nsa.gov", "dhs.gov",
+      "treasury.gov", "justice.gov", "energy.gov", "nasa.gov",
+      "epa.gov", "cdc.gov", "nih.gov", "usda.gov", "dot.gov",
+      "hud.gov", "va.gov", "dol.gov", "ed.gov", "hhs.gov"
+    ]
+  },
+  
+  "international_governments": {
+    "description": "其他国家政府",
+    "domains": [
+      "gov.uk", "mod.uk", "parliament.uk", "royalfamily.gov.uk",
+      "number10.gov.uk", "gov.au", "gc.ca", "bundesregierung.de",
+      "elysee.fr", "governo.it", "gov.jp", "kremlin.ru",
+      "gov.in", "gov.br", "gov.za", "gov.sg", "gov.my"
+    ]
+  },
+  
+  "international_organizations": {
+    "description": "国际组织",
+    "domains": [
+      "un.org", "who.int", "unesco.org", "unicef.org",
+      "unhcr.org", "wfp.org", "undp.org", "unep.org",
+      "nato.int", "europa.eu", "worldbank.org", "imf.org",
+      "wto.org", "oecd.org", "g20.org", "asean.org",
+      "africaunion.org", "bis.org", "ecb.europa.eu"
+    ]
+  },
+  
+  "education": {
+    "description": "重要教育机构",
+    "domains": [
+      "tsinghua.edu.cn", "pku.edu.cn", "fudan.edu.cn", "sjtu.edu.cn",
+      "zju.edu.cn", "nju.edu.cn", "ustc.edu.cn", "hit.edu.cn",
+      "harvard.edu", "mit.edu", "stanford.edu", "yale.edu",
+      "princeton.edu", "columbia.edu", "oxford.ac.uk", "cambridge.ac.uk"
+    ]
+  },
+  
+  "financial": {
+    "description": "重要金融机构",
+    "domains": [
+      "federalreserve.gov", "ecb.europa.eu", "boj.or.jp",
+      "bankofengland.co.uk", "bundesbank.de", "banque-france.fr",
+      "swift.com", "visa.com", "mastercard.com", "paypal.com"
+    ]
+  },
+  
+  "critical_infrastructure": {
+    "description": "关键基础设施关键词",
+    "keywords": [
+      "hospital", "emergency", "911", "110", "119", "120",
+      "police", "fire", "ambulance", "medical", "health",
+      "power", "electric", "electricity", "water", "gas", "nuclear",
+      "airport", "railway", "subway", "metro", "bank", "financial",
+      "school", "university", "government", "military", "defense",
+      "critical", "infrastructure", "utility", "telecom"
+    ]
+  },
+  
+  "protected_ip_ranges": {
+    "description": "受保护的IP地址段",
+    "ranges": [
+      "127.0.0.0/8",
+      "10.0.0.0/8", 
+      "172.16.0.0/12",
+      "192.168.0.0/16",
+      "169.254.0.0/16",
+      "224.0.0.0/4",
+      "240.0.0.0/4"
+    ]
+  }
+}

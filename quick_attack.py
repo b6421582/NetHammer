@@ -11,14 +11,31 @@ import time
 import subprocess
 import threading
 from datetime import datetime
+from whitelist_filter import WhitelistFilter
 
 class QuickTester:
     def __init__(self):
         self.test_processes = []
+        self.whitelist_filter = WhitelistFilter()
         
     def log(self, message):
         timestamp = datetime.now().strftime("%H:%M:%S")
         print(f"[{timestamp}] {message}")
+
+    def check_target_safety(self, target):
+        """检查目标是否安全可测试"""
+        is_protected, message = self.whitelist_filter.check_target(target)
+        if is_protected:
+            self.log(f"🚫 安全检查失败: {message}")
+            self.log("🛡️ NetHammer拒绝对受保护的目标进行测试")
+            self.log("📋 如需测试，请确保:")
+            self.log("   1. 获得目标系统的明确书面授权")
+            self.log("   2. 遵守当地法律法规")
+            self.log("   3. 仅用于合法的安全测试目的")
+            return False
+        else:
+            self.log(f"✅ 目标安全检查通过: {target}")
+            return True
     
     def check_tools(self):
         """检查攻击工具是否存在"""
@@ -160,8 +177,12 @@ class QuickTester:
 
     def single_attack(self, target_ip, target_port, method, threads, duration):
         """单一攻击方法"""
+        # 安全检查
+        if not self.check_target_safety(target_ip):
+            return
+
         self.log("=" * 50)
-        self.log(f"启动 {method.upper()} 攻击")
+        self.log(f"启动 {method.upper()} 压力测试")
         self.log(f"目标: {target_ip}:{target_port}")
         self.log(f"线程: {threads}")
         self.log(f"持续时间: {duration}秒")
@@ -193,8 +214,12 @@ class QuickTester:
 
     def combo_attack(self, target_ip, target_port, methods, threads, duration):
         """组合攻击"""
+        # 安全检查
+        if not self.check_target_safety(target_ip):
+            return
+
         self.log("=" * 50)
-        self.log("启动组合DDoS攻击")
+        self.log("启动组合压力测试")
         self.log(f"目标: {target_ip}:{target_port}")
         self.log(f"方法: {', '.join(methods)}")
         self.log(f"持续时间: {duration}秒")
@@ -233,8 +258,12 @@ class QuickTester:
 
     def multi_attack(self, target_ip, target_port, duration=300):
         """多重攻击 (预设组合)"""
+        # 安全检查
+        if not self.check_target_safety(target_ip):
+            return
+
         self.log("=" * 50)
-        self.log("启动多重DDoS攻击")
+        self.log("启动多重压力测试")
         self.log(f"目标: {target_ip}:{target_port}")
         self.log(f"持续时间: {duration}秒")
         self.log("=" * 50)
