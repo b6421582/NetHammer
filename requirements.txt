@@ -1,0 +1,16 @@
+# NetHammer Python依赖
+# 核心依赖 (Python标准库，无需安装)
+# - socket
+# - threading  
+# - subprocess
+# - json
+# - time
+# - os
+# - sys
+
+# 可选依赖 (提升功能)
+psutil>=5.8.0          # 系统资源监控
+requests>=2.25.0       # HTTP请求 (用于分布式功能)
+
+# 开发依赖 (可选)
+# speedtest-cli>=2.1.0   # 网络速度测试 (可选安装)
