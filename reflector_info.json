@@ -1,0 +1,24 @@
+{
+  "description": "NetHammer 反射器列表信息",
+  "last_updated": "2025-08-14T18:45:44.699633",
+  "reflector_types": {
+    "ntp": {
+      "description": "NTP时间服务器反射器",
+      "port": 123,
+      "protocol": "UDP",
+      "amplification_factor": "2-10x"
+    },
+    "dns": {
+      "description": "DNS域名服务器反射器",
+      "port": 53,
+      "protocol": "UDP",
+      "amplification_factor": "28-54x"
+    },
+    "ssdp": {
+      "description": "SSDP UPnP设备反射器",
+      "port": 1900,
+      "protocol": "UDP",
+      "amplification_factor": "30-40x"
+    }
+  }
+}

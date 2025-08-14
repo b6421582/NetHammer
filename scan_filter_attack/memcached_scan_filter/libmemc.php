@@ -1,6 +1,5 @@
 <?php
-//我要如何运行？
-//php 这个ssdp过滤脚本的名称 输入的列表 输出到哪里 验证包根据放大倍数 线程
+
 include __DIR__ . "/config.php";
 
 set_error_handler(function ($errno, $errstr, $errfile, $errline, array $errcontext) {

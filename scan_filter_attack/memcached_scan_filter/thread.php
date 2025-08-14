@@ -1,4 +1,5 @@
 <?php
+
 if (threadfound($argv) == true) {
 	die(thread($argv[1], $argv[2], $argv[3]));
 } else {

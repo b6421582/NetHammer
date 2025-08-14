@@ -1,4 +1,5 @@
 <?php
+
 include __DIR__ . "/libmemc.php";
 
 function SetupHostServer($target, $host, $set = FALSE, $timeout = 1) {
